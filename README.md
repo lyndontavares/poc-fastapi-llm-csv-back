@@ -50,13 +50,14 @@ Para construir seus agentes, vocês podem optar por escrever programas em Python
 NoCode/LowCode.
 
 Sugerimos os seguintes frameworks/ferramentas:
-• https://autogenhub.github.io/autogen/
-• https://ai.pydantic.dev/
-• https://www.langchain.com/
-• https://www.llamaindex.ai/
-• https://www.crewai.com/
-• https://n8n.io/
-• https://www.langflow.org/
+
+- https://autogenhub.github.io/autogen/
+- https://ai.pydantic.dev/
+- https://www.langchain.com/
+- https://www.llamaindex.ai/
+- https://www.crewai.com/
+- https://n8n.io/
+- https://www.langflow.org/
 
 Vocês devem usar pelo menos 1 dos frameworks/ferramentas sugeridos.
 Ao final de suas atividades, vocês devem gerar um relatório descrevendo:
