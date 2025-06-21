@@ -19,7 +19,7 @@ http://127.0.0.1:8000/docs
 
 <div align="center">
 
-![](assets/tela0.PNG) 
+![](assets/tela0.png) 
 
 </div>
 
@@ -27,7 +27,7 @@ http://127.0.0.1:8000/docs
 
 <div align="center">
 
-![](assets/tela1.PNG) 
+![](assets/tela1.png) 
 
 </div>
 
