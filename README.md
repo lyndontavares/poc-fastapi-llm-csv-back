@@ -1,3 +1,9 @@
+# poc-fastapi-llm-csv-back
+
+POC Backend com API Fastapi Gemini usando LangChain CSV
+
+Frontend: https://github.com/lyndontavares/poc-fastapi-llm-csv-front
+
 ## Instale
 
 ```
