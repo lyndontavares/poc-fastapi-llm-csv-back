@@ -46,9 +46,10 @@ app = FastAPI(
 
 # --- Configuração CORS ---
 origins = [
-    "http://localhost",
-    "http://localhost:8000",
-    "http://localhost:4200", # Porta padrão do Angular CLI
+    "*"
+    #"http://localhost",
+    #"http://localhost:8000",
+    #"http://localhost:4200", # Porta padrão do Angular CLI
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -95,6 +96,37 @@ async def get_status():
         "message": "API está funcionando!",
         "current_csv_loaded": current_loaded_csv_name
     }
+
+class PromptRequest(BaseModel):
+    prompt: str
+
+@app.post("/chat/gemini") # ,tags=["Interação com LLM"]
+async def chat_with_gemini(request: PromptRequest):
+    """
+    Recebe um prompt de texto, interage com o modelo Google Gemini e retorna a resposta.
+    """
+    try:
+        model = genai.GenerativeModel(GEMINI_PRO_MODEL)
+        
+        # Gera o conteúdo usando o modelo
+        response = model.generate_content(request.prompt)
+        
+        # Verifica se a resposta contém texto
+        if response.parts:
+            # Concatena todas as partes da resposta
+            full_response_text = "".join([part.text for part in response.parts if hasattr(part, 'text')])
+            return {"response": full_response_text}
+        else:
+            # Lida com casos onde a resposta pode ser vazia ou não ter texto
+            return {"response": "Não foi possível gerar uma resposta para o prompt."}
+
+    except Exception as e:
+        # Captura erros da API ou outros problemas
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Erro ao interagir com o modelo Gemini: {str(e)}"
+        )
+
 
 # --- Endpoint: Upload de Arquivo ZIP (para extração persistente, mantém os arquivos) ---
 @app.post("/upload_zip")
