@@ -21,6 +21,10 @@ from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe
 
 from sqlalchemy import create_engine # Para o SQLite
 
+from langchain_community.agent_toolkits import create_sql_agent
+
+from langchain.agents.agent_types import AgentType
+
 # --- Configuração de Logging ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -673,9 +677,23 @@ async def upload_csv_batch_and_query_with_sql_agent(
         sql_agent = create_sql_agent(
             llm,
             db=db,
-            agent_type=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION, # Ou AgentType.OPENAI_FUNCTIONS
+            agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, # Ou AgentType.OPENAI_FUNCTIONS
             verbose=True, # Para ver os passos de raciocínio e o SQL gerado
-            handle_parsing_errors=True
+            handle_parsing_errors=True,
+            system_prompt=f"""### PAPEL: Especialista em SQLite3.
+            ### CONTEXTO: Você tem acesso a um banco de dados SQLite3 em memória
+            ### INSTRUÇÕES: Responda às perguntas do usuário usando os dados disponíveis nas tabelas carregadas.
+            ### PONTOS DE ATENÇÃO
+            - utiilize aiaas para todas as colunas de todas as tabelas m todos comandos DML (Data Manipulation Language).
+            - Usar aspas duplas garante que o banco de dados interprete corretamente o nome inteiro, incluindo os espaços, como um único identificador de coluna.
+            - As tabelas estão relaconadas pela coluna: chave_acesso TEXT, que é a chave primária de cada tabela.
+            - Você pode realizar junções (joins) entre tabelas usando a coluna chave_acesso.
+            - Se a pergunta exigir cálculos ou agregações, explique brevemente como chegou à resposta.
+            - Se a pergunta não puder ser respondida com os dados disponíveis, diga isso claramente.
+            - Caso seja solicitado algo fora do seu contexto retorne vazio ('').
+            - Utilize alias para nomear a coluna retornada conforme o contexto dela.
+            - Para procurar conteúdo de texto utilizar sempre a função UPPER para garantir que não tenha problemas decorrentes de consistência de dados.
+            """
         )
 
         logger.info(f"Agente SQL criado. Perguntando: '{question}'")
